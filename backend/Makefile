@@ -8,8 +8,10 @@ help:
 	@echo ""
 	@echo "Setup & Installation:"
 	@echo "  setup          - Initial project setup (install uv, create venv, install deps)"
+	@echo "  setup-simple   - Simplified setup without ML dependencies (no compilation needed)"
 	@echo "  install        - Install production dependencies"
 	@echo "  install-dev    - Install development dependencies"
+	@echo "  install-simple - Install simplified dependencies (no spacy/whisper)"
 	@echo ""
 	@echo "Development:"
 	@echo "  run            - Run the FastAPI development server"
@@ -49,6 +51,20 @@ setup: check-uv
 	@if [ ! -f .env ]; then cp .env.example .env; echo "⚠️  Please edit .env file with your API keys"; fi
 	@echo "✅ Setup complete! Run 'make run' to start the server."
 
+# Simplified setup (without ML dependencies that require compilation)
+setup-simple: check-uv
+	@echo "🚀 Setting up MindTube Backend (Simplified)..."
+	@echo "📦 Creating virtual environment with Python $(PYTHON_VERSION)..."
+	uv venv $(VENV_NAME) --python $(PYTHON_VERSION)
+	@echo "📥 Installing simplified dependencies..."
+	$(MAKE) install-simple
+	@echo "📁 Creating data directories..."
+	mkdir -p data/{artifacts,cache,logs}
+	@echo "📄 Copying environment file..."
+	@if [ ! -f .env ]; then cp .env.example .env; echo "⚠️  Please edit .env file with your API keys"; fi
+	@echo "✅ Simplified setup complete! Note: ML features (spacy, whisper) not available."
+	@echo "💡 To install full dependencies, run 'sudo apt install build-essential' then 'make install-dev'"
+
 # Install production dependencies
 install:
 	@echo "📥 Installing production dependencies..."
@@ -58,6 +74,11 @@ install:
 install-dev:
 	@echo "📥 Installing development dependencies..."
 	uv pip install -e ".[dev]"
+
+# Install simplified dependencies (without heavy ML packages)
+install-simple:
+	@echo "📥 Installing simplified dependencies..."
+	uv pip install -r requirements-simple.txt
 
 # Build/validate the application
 build:
