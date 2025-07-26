@@ -1,0 +1,34 @@
+WBS ID,Feature ID,Task Name,Description,Owner (Role),Estimate (hours),Priority,Phase,Start (JST),End (JST),Dependencies,Deliverable
+WBS-0.1,,Repo & Tooling,"Init monorepo, lint/format, pre-commit, CI lint",Infra,2,P0,Setup,2025-07-27 AM,2025-07-27 AM,,"Repo initialized, CI green"
+WBS-0.2,F-006,Next.js Skeleton,"Create FE app with landing route, tabs stub, dark theme base",FE,3,P0,Setup,2025-07-27 AM,2025-07-27 AM,WBS-0.1,Running FE skeleton
+WBS-0.3,,FastAPI Skeleton,"Create API app, settings/env, health endpoint",API,3,P0,Setup,2025-07-27 PM,2025-07-27 PM,WBS-0.1,Running API skeleton
+WBS-1.1,F-001,/ingest Contract & Validation,"Define OpenAPI schema, validate YT URL formats, return job_id",API,4,P0,Backend Scaffold,2025-07-27 PM,2025-07-27 PM,WBS-0.3,/ingest endpoint + schema
+WBS-1.1b,F-001,Job Model & Dedupe,Create job struct/table; dedupe identical in-flight jobs,BE,2,P0,Backend Scaffold,2025-07-27 PM,2025-07-27 PM,WBS-0.3,Job store with dedupe
+WBS-1.2,F-002,YouTube Metadata & Captions,"Client for metadata + captions, quota/errors mapped",BE,6,P0,Transcript Service,2025-07-28,2025-07-28,WBS-1.1,YT client module + tests
+WBS-1.3,F-003,Transcript Normalizer & Hash,Normalize to segments with timestamps; compute transcript_hash,BE,5,P0,Transcript Service,2025-07-28,2025-07-28,WBS-1.2,segments.json + hash
+WBS-1.4,F-004,Chunker & Map Orchestrator,Token-aware chunking; parallel map with mini model + retries,BE,8,P0,Summarization,2025-07-29 AM,2025-07-29 AM,WBS-1.3,Chunk outputs JSON
+WBS-1.5,F-004,Reduce Stage + Budget,Reduce merge; dedupe; token/cost guardrail enforcement,BE,6,P0,Summarization,2025-07-29 PM,2025-07-29 PM,WBS-1.4,Final sections JSON
+WBS-1.6,F-005,Timestamp Linking Utility,ts string ↔ seconds helpers; YouTube &t=Ss links,BE,2,P0,Summarization,2025-07-29 PM,2025-07-29 PM,WBS-1.5,Timestamp helpers + tests
+WBS-1.7,F-008,Progress Events + Partial Summary,"Emit stages, compute ETA; early short summary path",API/BE,6,P0,Progress,2025-07-30 AM,2025-07-30 AM,WBS-1.5,Status updates + partial text
+WBS-1.7b,F-004,/status Schema,"Standard progress fields: stage, pct, eta",API,2,P0,Progress,2025-07-30 AM,2025-07-30 AM,WBS-1.7,OpenAPI + implementation
+WBS-1.8,F-009,Error Taxonomy & Responses,"Duration cap, private/members-only, invalid URL mapped to codes",API,4,P0,Errors,2025-07-30 PM,2025-07-30 PM,WBS-1.1,Consistent error payloads
+WBS-1.9,F-010,Cache Layer & Idempotency,Lookup by video_id+hash+params; artifact reuse; locking,BE,6,P0,Cache,2025-07-31 AM,2025-07-31 AM,WBS-1.5,Cache hit path + tests
+WBS-2.3,F-006,Tabs & ARIA,Tabs for Summary/Ideas/Takeaways/Transcript; keyboard accessible,FE,4,P0,Frontend,2025-07-31 PM,2025-07-31 PM,WBS-0.2,Accessible tabs component
+WBS-2.4,F-004/F-005,Render Sections & Timestamps,Render sections from /result; add timestamp chips,FE,4,P0,Frontend,2025-07-31 PM,2025-07-31 PM,WBS-2.3;WBS-1.6,Results panels working
+WBS-2.1,F-001,Landing Form + Validation,URL input with examples; disable Process until valid,FE,3,P0,Frontend,2025-08-01 AM,2025-08-01 AM,WBS-1.1,Working form with hints
+WBS-2.2,F-008,Progress UI + Early Output,Progress list + early Short Summary area,FE,4,P0,Frontend,2025-08-01 AM,2025-08-01 AM,WBS-1.7,Live progress updates
+WBS-2.5,F-007,Markdown Export,Copy to clipboard + download .md mirroring UI,FE,3,P0,Frontend,2025-08-01 PM,2025-08-01 PM,WBS-2.4,.md file export
+WBS-2.9,F-009/F-014,Error Modals,"UX for invalid URL, too long; prompt to enable ASR when no captions",FE,3,P0,Frontend,2025-08-01 PM,2025-08-01 PM,WBS-1.8,Clear modal flows
+WBS-1.11,F-016,Concurrency & Queue ETA,Semaphore limit 3; queued jobs with ETA; cancel,BE,6,P1,Optional,2025-08-02 AM,2025-08-02 AM,WBS-1.7,Queue manager + cancel
+WBS-2.6,F-011,History Drawer,LocalStorage list of last 20 runs; open/delete,FE,4,P1,Optional,2025-08-02 PM,2025-08-02 PM,WBS-2.4,History UI
+WBS-2.7,F-012,Transcript Search,Client-side search and highlight in transcript panel,FE,3,P1,Optional,2025-08-02 PM,2025-08-02 PM,WBS-2.4,Search box + highlight
+WBS-2.8,F-013,Settings Modal,"Language, duration cap, ASR default, budget guardrail",FE,3,P1,Optional,2025-08-02 PM,2025-08-02 PM,WBS-2.1,Settings UI + local save
+WBS-1.10,F-014,ASR Worker Stub,Whisper pipeline stub; duration-capped; returns transcript JSON,BE,6,P1,Optional,2025-08-02 AM,2025-08-02 AM,WBS-1.2,ASR job path
+WBS-1.12,F-015,Observability Logs & Metrics,"Structured logs, timers, token estimates, counters",BE,3,P1,Optional,2025-08-02 PM,2025-08-02 PM,WBS-0.3,Log fields + basic dashboard
+WBS-2.10,F-010,Cache Badge (UI),Show 'Loaded from cache' indicator on results,FE,1,P1,Optional,2025-08-02 PM,2025-08-02 PM,WBS-1.9,Cache badge
+WBS-2.11,F-016,Queued UI,Show queue position/ETA and cancel button,FE,2,P1,Optional,2025-08-02 PM,2025-08-02 PM,WBS-1.11,Queued state UI
+WBS-2.12,F-014,ASR Prompt UI,Dedicated ASR enable/continue modal & progress note,FE,2,P1,Optional,2025-08-02 PM,2025-08-02 PM,WBS-1.10,ASR modal UI
+WBS-3.1,,Unit Tests,"Chunker, time utils, markdown exporter, url validation",QA/BE,5,P0,QA,2025-08-03 AM,2025-08-03 AM,WBS-1.4;WBS-2.5,pytest passing
+WBS-3.2,,Integration Tests,Captions → normalize; pipeline map/reduce (mock LLM),QA/BE,6,P0,QA,2025-08-03 AM,2025-08-03 AM,WBS-1.2;WBS-1.5,integration suite passing
+WBS-3.3,,API Smoke + Golden Set,Run /ingest→/status→/result; manual rubric on 10 videos,QA,6,P0,QA,2025-08-03 PM,2025-08-03 PM,WBS-2.2;WBS-2.4,QA report + metrics
+WBS-3.4,,Docs Polish,"README, known issues, ops notes; version tag",PM,3,P0,QA,2025-08-03 PM,2025-08-03 PM,WBS-3.3,Docs ready for MVP
