@@ -147,6 +147,7 @@ export interface ProcessingStore {
   
   // Actions
   startProcessing: (request: VideoIngestRequest) => Promise<void>;
+  pollProgress: (jobId: string) => void;
   updateProgress: (jobId: string, progress: ProcessingProgress) => void;
   setResult: (jobId: string, result: ProcessingResult) => void;
   setError: (jobId: string, error: string) => void;

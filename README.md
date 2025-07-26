@@ -9,6 +9,7 @@ Transform long YouTube videos into concise, actionable insights with timestamped
 ### Prerequisites
 - Node.js 18+ 
 - Python 3.9+
+- [uv](https://docs.astral.sh/uv/) (Python package manager)
 - YouTube Data API key
 - OpenAI API key (or other LLM provider)
 
@@ -18,23 +19,38 @@ Transform long YouTube videos into concise, actionable insights with timestamped
 ```bash
 git clone <repo-url>
 cd mindtube
-cp .env.example .env
-# Edit .env with your API keys
 ```
 
-2. **Backend Setup**
+2. **Automated Setup (Recommended)**
+```bash
+# This will setup both backend and frontend automatically
+./scripts/dev.sh
+```
+
+3. **Manual Setup**
+
+**Backend Setup:**
 ```bash
 cd backend
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-pip install -r requirements.txt
-uvicorn app.main:app --reload --port 8000
+# Install uv if not already installed
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Setup environment and dependencies
+make setup
+
+# Edit environment file with your API keys
+cp .env.example .env
+# Edit .env with your API keys
+
+# Start backend server
+make run
 ```
 
-3. **Frontend Setup**
+**Frontend Setup:**
 ```bash
 cd frontend
 npm install
+cp .env.example .env
 npm run dev
 ```
 
@@ -80,23 +96,53 @@ mindtube/
 
 ## 🛠 Development
 
-### Running Tests
-```bash
-# Backend tests
-cd backend && python -m pytest
+### Backend Development Commands
 
-# Frontend tests  
-cd frontend && npm test
+The backend uses a Makefile for common development tasks:
+
+```bash
+cd backend
+
+# Setup and installation
+make setup          # Initial setup with uv
+make install        # Install production dependencies
+make install-dev    # Install development dependencies
+
+# Development
+make run            # Start development server
+make build          # Validate application build
+make test           # Run tests
+make test-cov       # Run tests with coverage
+make lint           # Run linting (flake8, mypy, bandit)
+make format         # Format code (black, isort)
+
+# Maintenance
+make update         # Update dependencies
+make clean          # Clean cache and temporary files
+make info           # Show environment information
 ```
 
-### Code Quality
-```bash
-# Backend linting
-cd backend && black . && flake8 .
+### Frontend Development Commands
 
-# Frontend linting
-cd frontend && npm run lint
+```bash
+cd frontend
+
+# Development
+npm run dev         # Start development server
+npm run build       # Build for production
+npm run start       # Start production server
+
+# Testing and Quality
+npm test            # Run tests
+npm run lint        # Run ESLint
+npm run type-check  # TypeScript type checking
 ```
+
+### Environment Files
+
+The project now uses separate environment files:
+- `backend/.env` - Backend configuration (API keys, database, etc.)
+- `frontend/.env` - Frontend configuration (API endpoints, feature flags, etc.)
 
 ## 📊 Success Metrics (MVP)
 - **Latency**: ≤15s for first summary (≤10min video with captions)

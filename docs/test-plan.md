@@ -21,9 +21,9 @@ This plan defines how we validate the MindTube MVP:
 
 We’ll combine **automated** (unit/integration/API) and **manual** (golden set rubric) tests:
 - **Unit**: chunking, timestamp conversions, Markdown generator, caching, validators.
-- **Integration**: caption fetch → normalize; map/reduce pipeline using mocked LLM.
+- **Integration**: carmalize; map/reduce pipeline using mocked LLM.
 - **API/E2E**: `/ingest` → `/status` → `/result` with real captions for short public videos.
-- **Manual QA**: Human rubric on 10–15 diverse videos; accessibility pass.
+- **Manual QA**: Human rubric on 1ption fetch → no0–15 diverse videos; accessibility pass.
 - **Non‑functional**: performance (latency), cost guardrails, reliability (success rate).
 
 Exit when MVP acceptance metrics are met (see §9).

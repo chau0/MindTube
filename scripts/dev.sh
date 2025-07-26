@@ -7,12 +7,17 @@ set -e
 
 echo "🚀 Starting MindTube Development Environment"
 
-# Check if .env file exists
-if [ ! -f .env ]; then
-    echo "⚠️  .env file not found. Copying from .env.example..."
-    cp .env.example .env
-    echo "📝 Please edit .env file with your API keys before continuing."
-    exit 1
+# Check if backend .env file exists
+if [ ! -f backend/.env ]; then
+    echo "⚠️  Backend .env file not found. Copying from .env.example..."
+    cp backend/.env.example backend/.env
+    echo "📝 Please edit backend/.env file with your API keys before continuing."
+fi
+
+# Check if frontend .env file exists
+if [ ! -f frontend/.env ]; then
+    echo "⚠️  Frontend .env file not found. Copying from .env.example..."
+    cp frontend/.env.example frontend/.env
 fi
 
 # Function to check if command exists
@@ -46,19 +51,19 @@ mkdir -p data/{artifacts,cache,logs}
 echo "🐍 Setting up backend..."
 cd backend
 
-if [ ! -d "venv" ]; then
-    echo "Creating Python virtual environment..."
-    python3 -m venv venv
+# Check if uv is installed
+if ! command_exists uv; then
+    echo "Installing uv package manager..."
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+    export PATH="$HOME/.cargo/bin:$PATH"
 fi
 
-echo "Activating virtual environment..."
-source venv/bin/activate
-
-echo "Installing Python dependencies..."
-pip install -r requirements.txt
+# Setup backend using Makefile
+echo "Setting up backend environment..."
+make setup
 
 echo "Starting backend server..."
-uvicorn app.main:app --reload --port 8000 &
+make run &
 BACKEND_PID=$!
 
 cd ..

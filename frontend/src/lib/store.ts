@@ -53,7 +53,7 @@ export const useProcessingStore = create<ProcessingStore>()(
         }
       },
 
-      pollProgress: async (jobId: string) => {
+      pollProgress: (jobId: string) => {
         const pollInterval = setInterval(async () => {
           try {
             const status = await apiClient.getJobStatus(jobId);
