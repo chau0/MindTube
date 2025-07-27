@@ -1,6 +1,6 @@
 # MindTube Backend Makefile
 
-.PHONY: help setup install install-dev build run test test-cov lint format clean update check-deps
+.PHONY: help setup install install-dev build run test test-cov test-unit test-integration test-e2e test-coverage test-watch test-tdd test-fast test-slow test-azure test-api test-parallel test-debug lint format clean update check-deps
 
 # Default target
 help:
@@ -16,11 +16,23 @@ help:
 	@echo "Development:"
 	@echo "  run            - Run the FastAPI development server"
 	@echo "  build          - Build the application (validate imports)"
-	@echo "  test           - Run tests"
-	@echo "  test-cov       - Run tests with coverage report"
 	@echo "  lint           - Run linting (flake8, mypy)"
 	@echo "  format         - Format code (black, isort)"
 	@echo "  check-deps     - Check for dependency vulnerabilities"
+	@echo ""
+	@echo "Testing:"
+	@echo "  test           - Run all tests with coverage"
+	@echo "  test-unit      - Run unit tests only"
+	@echo "  test-integration - Run integration tests only"
+	@echo "  test-e2e       - Run end-to-end tests only"
+	@echo "  test-coverage  - Run tests with detailed coverage"
+	@echo "  test-tdd       - Run TDD test runner (no deps)"
+	@echo "  test-fast      - Run fast tests only"
+	@echo "  test-azure     - Run Azure OpenAI tests"
+	@echo "  test-api       - Run API tests"
+	@echo "  test-watch     - Run tests in watch mode"
+	@echo "  test-parallel  - Run tests in parallel"
+	@echo "  test-debug     - Run tests with debugging"
 	@echo ""
 	@echo "Maintenance:"
 	@echo "  update         - Update dependencies"
@@ -75,6 +87,16 @@ install-dev:
 	@echo "📥 Installing development dependencies..."
 	uv pip install -e ".[dev]"
 
+# Install test dependencies
+install-test:
+	@echo "🧪 Installing test dependencies..."
+	uv pip install pytest pytest-asyncio pytest-cov pytest-watch pytest-xdist httpx
+
+# Install test dependencies with pip (fallback)
+install-test-pip:
+	@echo "🧪 Installing test dependencies with pip..."
+	$(PIP) install pytest pytest-asyncio pytest-cov pytest-watch pytest-xdist httpx
+
 # Install simplified dependencies (without heavy ML packages)
 install-simple:
 	@echo "📥 Installing simplified dependencies..."
@@ -94,15 +116,73 @@ run:
 	@if [ ! -f .env ]; then echo "⚠️  .env file not found. Run 'make setup' first."; exit 1; fi
 	$(PYTHON) -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 
-# Run tests
+# Run all tests (unit + integration + e2e)
 test:
-	@echo "🧪 Running tests..."
-	$(PYTHON) -m pytest tests/ -v
+	@echo "🧪 Running complete test suite..."
+	$(PYTHON) -m pytest tests/ -v --tb=short --cov=app --cov-report=term-missing
 
-# Run tests with coverage
-test-cov:
-	@echo "🧪 Running tests with coverage..."
-	$(PYTHON) -m pytest tests/ -v --cov=app --cov-report=html --cov-report=term-missing
+# Run tests with coverage (alias for test)
+test-cov: test
+
+# Run unit tests only
+test-unit:
+	@echo "🔬 Running unit tests..."
+	$(PYTHON) -m pytest tests/unit/ -v --tb=short
+
+# Run integration tests only
+test-integration:
+	@echo "🔗 Running integration tests..."
+	$(PYTHON) -m pytest tests/integration/ -v --tb=short
+
+# Run end-to-end tests only
+test-e2e:
+	@echo "🎯 Running end-to-end tests..."
+	$(PYTHON) -m pytest tests/e2e/ -v --tb=short
+
+# Run tests with detailed coverage report
+test-coverage:
+	@echo "📊 Running tests with coverage analysis..."
+	$(PYTHON) -m pytest tests/ -v --cov=app --cov-report=html --cov-report=term-missing --cov-fail-under=80
+
+# Run tests in watch mode (re-run on file changes)
+test-watch:
+	@echo "👀 Running tests in watch mode..."
+	$(PYTHON) -m pytest-watch tests/ -- -v --tb=short
+
+# Run TDD test runner (no external dependencies)
+test-tdd:
+	@echo "🚀 Running TDD test runner..."
+	$(PYTHON) run_tdd_tests.py
+
+# Run fast tests only (exclude slow/e2e tests)
+test-fast:
+	@echo "⚡ Running fast tests..."
+	$(PYTHON) -m pytest tests/unit/ tests/integration/ -v --tb=short -m "not slow"
+
+# Run slow tests only
+test-slow:
+	@echo "🐌 Running slow tests..."
+	$(PYTHON) -m pytest tests/ -v --tb=short -m "slow"
+
+# Run Azure OpenAI integration tests
+test-azure:
+	@echo "☁️  Running Azure OpenAI integration tests..."
+	$(PYTHON) -m pytest tests/ -v --tb=short -k "azure or llm or summarization"
+
+# Run API-specific tests
+test-api:
+	@echo "🌐 Running API tests..."
+	$(PYTHON) -m pytest tests/integration/test_api_endpoints.py tests/e2e/ -v --tb=short
+
+# Run tests in parallel (requires pytest-xdist)
+test-parallel:
+	@echo "⚡ Running tests in parallel..."
+	$(PYTHON) -m pytest tests/ -v --tb=short -n auto
+
+# Run tests with debugging enabled
+test-debug:
+	@echo "🐛 Running tests with debugging..."
+	$(PYTHON) -m pytest tests/ -v -s --tb=long --pdb-trace
 
 # Lint code
 lint:

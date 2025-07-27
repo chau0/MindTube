@@ -4,7 +4,7 @@ Video summarization service using Azure OpenAI
 
 import asyncio
 from typing import List, Dict, Any, Optional
-from app.services.llm_client import llm_client
+from app.services.llm_client import get_llm_client
 from app.models.schemas import TranscriptSegment, SummarySection
 from app.core.logging import logger
 from app.core.config import settings
@@ -25,7 +25,7 @@ class SummarizationService:
             
             for segment in transcript:
                 segment_text = f"[{self._format_timestamp(segment.start_ms)}] {segment.text}"
-                segment_tokens = llm_client.count_tokens(segment_text)
+                segment_tokens = get_llm_client().count_tokens(segment_text)
                 
                 # If adding this segment would exceed chunk size, start new chunk
                 if current_tokens + segment_tokens > self.chunk_size and current_chunk:
@@ -41,7 +41,7 @@ class SummarizationService:
                 chunks.append(current_chunk.strip())
             
             logger.info(f"Transcript chunked into {len(chunks)} parts", 
-                       total_tokens=sum(llm_client.count_tokens(chunk) for chunk in chunks))
+                       total_tokens=sum(get_llm_client().count_tokens(chunk) for chunk in chunks))
             
             return chunks
             
@@ -56,14 +56,14 @@ class SummarizationService:
             
             # For short summary, process chunks and then reduce
             if len(chunks) == 1:
-                summary = await llm_client.generate_summary(chunks[0], "short")
+                summary = await get_llm_client().generate_summary(chunks[0], "short")
                 return self._parse_bullet_points(summary)
             
             # Process chunks in parallel
-            chunk_summaries = await llm_client.process_transcript_chunks(chunks, "short")
+            chunk_summaries = await get_llm_client().process_transcript_chunks(chunks, "short")
             
             # Reduce to final summary
-            final_summary = await llm_client.reduce_summaries(chunk_summaries, "short")
+            final_summary = await get_llm_client().reduce_summaries(chunk_summaries, "short")
             
             return self._parse_bullet_points(final_summary)
             
@@ -77,10 +77,10 @@ class SummarizationService:
             chunks = self.chunk_transcript(transcript)
             
             # Process chunks in parallel
-            chunk_summaries = await llm_client.process_transcript_chunks(chunks, "detailed")
+            chunk_summaries = await get_llm_client().process_transcript_chunks(chunks, "detailed")
             
             # Reduce to final summary
-            final_summary = await llm_client.reduce_summaries(chunk_summaries, "detailed")
+            final_summary = await get_llm_client().reduce_summaries(chunk_summaries, "detailed")
             
             # Convert to SummarySection objects with estimated timestamps
             sections = self._parse_summary_sections(final_summary, transcript)
@@ -97,10 +97,10 @@ class SummarizationService:
             chunks = self.chunk_transcript(transcript)
             
             # Process chunks in parallel
-            chunk_ideas = await llm_client.process_transcript_chunks(chunks, "key_ideas")
+            chunk_ideas = await get_llm_client().process_transcript_chunks(chunks, "key_ideas")
             
             # Reduce to final key ideas
-            final_ideas = await llm_client.reduce_summaries(chunk_ideas, "key_ideas")
+            final_ideas = await get_llm_client().reduce_summaries(chunk_ideas, "key_ideas")
             
             # Convert to SummarySection objects
             ideas = self._parse_summary_sections(final_ideas, transcript)
@@ -117,10 +117,10 @@ class SummarizationService:
             chunks = self.chunk_transcript(transcript)
             
             # Process chunks in parallel
-            chunk_takeaways = await llm_client.process_transcript_chunks(chunks, "takeaways")
+            chunk_takeaways = await get_llm_client().process_transcript_chunks(chunks, "takeaways")
             
             # Reduce to final takeaways
-            final_takeaways = await llm_client.reduce_summaries(chunk_takeaways, "takeaways")
+            final_takeaways = await get_llm_client().reduce_summaries(chunk_takeaways, "takeaways")
             
             # Convert to SummarySection objects
             takeaways = self._parse_summary_sections(final_takeaways, transcript)

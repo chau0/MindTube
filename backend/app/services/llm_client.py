@@ -17,10 +17,13 @@ class AzureOpenAIClient:
     def __init__(self):
         self.client = None
         self.async_client = None
-        self._initialize_clients()
+        self._initialized = False
         
     def _initialize_clients(self):
-        """Initialize Azure OpenAI clients"""
+        """Initialize Azure OpenAI clients lazily"""
+        if self._initialized:
+            return
+            
         try:
             # Get Azure OpenAI configuration from environment
             azure_endpoint = os.getenv("AZURE_OPENAI_ENDPOINT")
@@ -44,11 +47,17 @@ class AzureOpenAIClient:
                 api_version=api_version
             )
             
+            self._initialized = True
             logger.info("Azure OpenAI clients initialized successfully")
             
         except Exception as e:
             logger.error(f"Failed to initialize Azure OpenAI clients: {e}")
             raise
+    
+    def _ensure_initialized(self):
+        """Ensure clients are initialized before use"""
+        if not self._initialized:
+            self._initialize_clients()
     
     def count_tokens(self, text: str, model: str = "gpt-4") -> int:
         """Count tokens in text using tiktoken"""
@@ -77,6 +86,7 @@ class AzureOpenAIClient:
         model: Optional[str] = None
     ) -> str:
         """Generate summary using Azure OpenAI"""
+        self._ensure_initialized()
         try:
             # Use configured model or default
             deployment_name = model or settings.DEFAULT_MAP_MODEL
@@ -139,6 +149,7 @@ class AzureOpenAIClient:
         summary_type: str = "detailed"
     ) -> List[str]:
         """Process multiple transcript chunks in parallel"""
+        self._ensure_initialized()
         try:
             logger.info(f"Processing {len(chunks)} chunks for {summary_type} summaries")
             
@@ -172,6 +183,7 @@ class AzureOpenAIClient:
         summary_type: str = "detailed"
     ) -> str:
         """Combine multiple summaries into a final coherent summary"""
+        self._ensure_initialized()
         try:
             if len(summaries) == 1:
                 return summaries[0]
@@ -227,5 +239,12 @@ class AzureOpenAIClient:
             raise
 
 
-# Global client instance
-llm_client = AzureOpenAIClient()
+# Global client instance (lazy initialization)
+llm_client = None
+
+def get_llm_client() -> AzureOpenAIClient:
+    """Get the global LLM client instance (lazy initialization)"""
+    global llm_client
+    if llm_client is None:
+        llm_client = AzureOpenAIClient()
+    return llm_client

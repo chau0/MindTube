@@ -1,0 +1,247 @@
+# MindTube Backend - Test-focused Makefile
+# This file contains comprehensive test commands following TDD guide patterns
+
+.PHONY: test-help test-setup test-all test-unit test-integration test-e2e test-coverage test-watch test-tdd test-fast test-slow test-azure test-api test-parallel test-debug test-clean
+
+# Test help
+test-help:
+	@echo "🧪 MindTube Backend - Test Commands"
+	@echo "=================================="
+	@echo ""
+	@echo "🚀 Quick Start:"
+	@echo "  make test-tdd      - Run basic tests (no dependencies)"
+	@echo "  make test-setup    - Install test dependencies"
+	@echo "  make test-all      - Run complete test suite"
+	@echo ""
+	@echo "📋 Test Categories:"
+	@echo "  test-unit          - Unit tests (fast, isolated)"
+	@echo "  test-integration   - Integration tests (API, services)"
+	@echo "  test-e2e           - End-to-end tests (complete workflows)"
+	@echo ""
+	@echo "📊 Coverage & Analysis:"
+	@echo "  test-coverage      - Detailed coverage report"
+	@echo "  test-fast          - Fast tests only (exclude slow)"
+	@echo "  test-slow          - Slow tests only"
+	@echo ""
+	@echo "🎯 Focused Testing:"
+	@echo "  test-azure         - Azure OpenAI integration tests"
+	@echo "  test-api           - API endpoint tests"
+	@echo "  test-llm           - LLM functionality tests"
+	@echo ""
+	@echo "⚡ Advanced:"
+	@echo "  test-watch         - Watch mode (re-run on changes)"
+	@echo "  test-parallel      - Parallel execution"
+	@echo "  test-debug         - Debug mode with PDB"
+	@echo ""
+	@echo "🧹 Maintenance:"
+	@echo "  test-clean         - Clean test artifacts"
+	@echo ""
+
+# Variables for test execution
+PYTHON := python3
+PYTEST := $(PYTHON) -m pytest
+PYTEST_ARGS := -v --tb=short
+COVERAGE_ARGS := --cov=app --cov-report=term-missing
+COVERAGE_HTML := --cov-report=html
+COVERAGE_FAIL := --cov-fail-under=80
+
+# Test setup - install dependencies
+test-setup:
+	@echo "🔧 Setting up test environment..."
+	@echo "📦 Installing test dependencies..."
+	$(PYTHON) -m pip install pytest pytest-asyncio pytest-cov pytest-watch pytest-xdist httpx
+	@echo "📁 Creating test directories..."
+	@mkdir -p tests/{unit,integration,e2e}
+	@mkdir -p htmlcov
+	@echo "✅ Test environment ready!"
+
+# Run TDD test runner (no external dependencies required)
+test-tdd:
+	@echo "🚀 Running TDD test runner..."
+	@if [ -f run_tdd_tests.py ]; then \
+		$(PYTHON) run_tdd_tests.py; \
+	else \
+		echo "❌ run_tdd_tests.py not found. Please ensure it exists."; \
+		exit 1; \
+	fi
+
+# Run all tests with coverage
+test-all:
+	@echo "🧪 Running complete test suite..."
+	$(PYTEST) tests/ $(PYTEST_ARGS) $(COVERAGE_ARGS)
+
+# Run unit tests only
+test-unit:
+	@echo "🔬 Running unit tests..."
+	$(PYTEST) tests/unit/ $(PYTEST_ARGS)
+
+# Run integration tests only
+test-integration:
+	@echo "🔗 Running integration tests..."
+	$(PYTEST) tests/integration/ $(PYTEST_ARGS)
+
+# Run end-to-end tests only
+test-e2e:
+	@echo "🎯 Running end-to-end tests..."
+	$(PYTEST) tests/e2e/ $(PYTEST_ARGS)
+
+# Run tests with detailed coverage report
+test-coverage:
+	@echo "📊 Running tests with detailed coverage analysis..."
+	$(PYTEST) tests/ $(PYTEST_ARGS) $(COVERAGE_ARGS) $(COVERAGE_HTML) $(COVERAGE_FAIL)
+	@echo "📄 Coverage report generated in htmlcov/index.html"
+
+# Run tests in watch mode
+test-watch:
+	@echo "👀 Running tests in watch mode..."
+	@echo "💡 Tests will re-run automatically when files change"
+	@echo "🛑 Press Ctrl+C to stop"
+	$(PYTHON) -m pytest_watch tests/ -- $(PYTEST_ARGS)
+
+# Run fast tests only (exclude slow markers)
+test-fast:
+	@echo "⚡ Running fast tests..."
+	$(PYTEST) tests/unit/ tests/integration/ $(PYTEST_ARGS) -m "not slow"
+
+# Run slow tests only
+test-slow:
+	@echo "🐌 Running slow tests..."
+	$(PYTEST) tests/ $(PYTEST_ARGS) -m "slow"
+
+# Run Azure OpenAI specific tests
+test-azure:
+	@echo "☁️  Running Azure OpenAI integration tests..."
+	$(PYTEST) tests/ $(PYTEST_ARGS) -k "azure or llm or summarization"
+
+# Run API endpoint tests
+test-api:
+	@echo "🌐 Running API endpoint tests..."
+	$(PYTEST) tests/integration/test_api_endpoints.py tests/e2e/ $(PYTEST_ARGS)
+
+# Run LLM functionality tests
+test-llm:
+	@echo "🤖 Running LLM functionality tests..."
+	$(PYTEST) tests/ $(PYTEST_ARGS) -k "llm or summarization or token"
+
+# Run tests in parallel
+test-parallel:
+	@echo "⚡ Running tests in parallel..."
+	$(PYTEST) tests/ $(PYTEST_ARGS) -n auto
+
+# Run tests with debugging enabled
+test-debug:
+	@echo "🐛 Running tests with debugging enabled..."
+	$(PYTEST) tests/ -v -s --tb=long --pdb-trace
+
+# Run specific test file
+test-file:
+	@echo "📄 Running specific test file..."
+	@if [ -z "$(FILE)" ]; then \
+		echo "❌ Please specify FILE=path/to/test_file.py"; \
+		exit 1; \
+	fi
+	$(PYTEST) $(FILE) $(PYTEST_ARGS)
+
+# Run specific test function
+test-func:
+	@echo "🎯 Running specific test function..."
+	@if [ -z "$(FUNC)" ]; then \
+		echo "❌ Please specify FUNC=test_function_name"; \
+		exit 1; \
+	fi
+	$(PYTEST) tests/ $(PYTEST_ARGS) -k "$(FUNC)"
+
+# Run tests with specific markers
+test-marker:
+	@echo "🏷️  Running tests with marker..."
+	@if [ -z "$(MARKER)" ]; then \
+		echo "❌ Please specify MARKER=marker_name"; \
+		exit 1; \
+	fi
+	$(PYTEST) tests/ $(PYTEST_ARGS) -m "$(MARKER)"
+
+# Clean test artifacts
+test-clean:
+	@echo "🧹 Cleaning test artifacts..."
+	@rm -rf .pytest_cache/
+	@rm -rf htmlcov/
+	@rm -f .coverage
+	@rm -f coverage.xml
+	@find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
+	@find . -type f -name "*.pyc" -delete 2>/dev/null || true
+	@echo "✅ Test artifacts cleaned!"
+
+# Test performance benchmarks
+test-perf:
+	@echo "📈 Running performance tests..."
+	$(PYTEST) tests/ $(PYTEST_ARGS) -m "perf" --benchmark-only
+
+# Test with different Python versions (if available)
+test-multi-python:
+	@echo "🐍 Testing with multiple Python versions..."
+	@for python in python3.9 python3.10 python3.11 python3.12; do \
+		if command -v $$python >/dev/null 2>&1; then \
+			echo "Testing with $$python..."; \
+			$$python -m pytest tests/unit/ -v --tb=short; \
+		fi; \
+	done
+
+# Generate test report
+test-report:
+	@echo "📋 Generating comprehensive test report..."
+	$(PYTEST) tests/ $(PYTEST_ARGS) $(COVERAGE_ARGS) $(COVERAGE_HTML) --junitxml=test-results.xml
+	@echo "📄 Test report generated:"
+	@echo "  - HTML Coverage: htmlcov/index.html"
+	@echo "  - JUnit XML: test-results.xml"
+
+# Validate test structure
+test-validate:
+	@echo "🔍 Validating test structure..."
+	@echo "📁 Checking test directories..."
+	@test -d tests/unit || (echo "❌ tests/unit/ directory missing" && exit 1)
+	@test -d tests/integration || (echo "❌ tests/integration/ directory missing" && exit 1)
+	@test -d tests/e2e || (echo "❌ tests/e2e/ directory missing" && exit 1)
+	@echo "📄 Checking test files..."
+	@find tests/ -name "test_*.py" | head -5 | while read file; do echo "  ✅ $$file"; done
+	@echo "🔧 Checking pytest configuration..."
+	@test -f pytest.ini || echo "⚠️  pytest.ini not found"
+	@test -f .coveragerc || echo "⚠️  .coveragerc not found"
+	@echo "✅ Test structure validation complete!"
+
+# Show test statistics
+test-stats:
+	@echo "📊 Test Statistics:"
+	@echo "==================="
+	@echo "📁 Test files: $$(find tests/ -name 'test_*.py' | wc -l)"
+	@echo "🧪 Unit tests: $$(find tests/unit/ -name 'test_*.py' | wc -l)"
+	@echo "🔗 Integration tests: $$(find tests/integration/ -name 'test_*.py' | wc -l)"
+	@echo "🎯 E2E tests: $$(find tests/e2e/ -name 'test_*.py' | wc -l)"
+	@if command -v pytest >/dev/null 2>&1; then \
+		echo "🔢 Total test functions: $$($(PYTEST) --collect-only -q tests/ 2>/dev/null | grep -c '<Function' || echo 'N/A')"; \
+	fi
+
+# Example usage targets
+test-examples:
+	@echo "💡 Test Command Examples:"
+	@echo "========================"
+	@echo ""
+	@echo "Basic usage:"
+	@echo "  make test-tdd                    # Quick validation (no deps)"
+	@echo "  make test-unit                   # Fast unit tests"
+	@echo "  make test-all                    # Complete test suite"
+	@echo ""
+	@echo "Focused testing:"
+	@echo "  make test-azure                  # Azure OpenAI tests"
+	@echo "  make test-api                    # API endpoint tests"
+	@echo "  make test-file FILE=tests/unit/test_llm_client.py"
+	@echo "  make test-func FUNC=test_token_counting"
+	@echo "  make test-marker MARKER=unit"
+	@echo ""
+	@echo "Development workflow:"
+	@echo "  make test-watch                  # Watch mode"
+	@echo "  make test-coverage               # With coverage"
+	@echo "  make test-debug                  # With debugging"
+	@echo ""
+
+# Default test target
+test: test-all
