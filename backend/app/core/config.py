@@ -15,6 +15,11 @@ class Settings(BaseSettings):
     ANTHROPIC_API_KEY: Optional[str] = None
     GOOGLE_API_KEY: Optional[str] = None
     
+    # Azure OpenAI Configuration
+    AZURE_OPENAI_ENDPOINT: Optional[str] = None
+    AZURE_OPENAI_API_KEY: Optional[str] = None
+    AZURE_OPENAI_API_VERSION: str = "2024-02-01"
+    
     # Backend Configuration
     BACKEND_HOST: str = "localhost"
     BACKEND_PORT: int = 8000
@@ -33,9 +38,9 @@ class Settings(BaseSettings):
     MAX_CONCURRENT_JOBS: int = 3
     DEFAULT_CHUNK_SIZE_TOKENS: int = 1500
     
-    # LLM Configuration
-    DEFAULT_MAP_MODEL: str = "gpt-4o-mini"
-    DEFAULT_REDUCE_MODEL: str = "gpt-4o-mini"
+    # LLM Configuration (Azure deployment names)
+    DEFAULT_MAP_MODEL: str = "gpt-4o-mini"  # Azure deployment name
+    DEFAULT_REDUCE_MODEL: str = "gpt-4o-mini"  # Azure deployment name
     MAX_TOKENS_PER_REQUEST: int = 4000
     TEMPERATURE: float = 0.1
     

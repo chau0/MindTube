@@ -27,5 +27,9 @@ black==23.11.0
 flake8==6.1.0
 isort==5.12.0
 
+# AI/LLM Integration (for Azure OpenAI)
+openai>=1.54.3
+tiktoken>=0.8.0
+
 # Security
 cryptography>=42.0.0,<43.0.0
