@@ -14,7 +14,7 @@ requests==2.31.0
 sqlalchemy==2.0.23
 
 # Utilities
-python-multipart==0.0.6
+python-multipart==0.0.18
 python-dotenv==1.0.0
 
 # Logging (required by app)
