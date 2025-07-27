@@ -19,7 +19,7 @@ alembic==1.13.1
 # HTTP Client & API Integration
 httpx==0.25.2
 aiohttp==3.9.1
-requests==2.31.0
+requests==2.32.4
 
 # YouTube & Media Processing
 google-api-python-client==2.108.0

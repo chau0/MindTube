@@ -8,7 +8,7 @@ pydantic-settings==2.1.0
 
 # HTTP Client & API Integration
 httpx==0.25.2
-requests==2.31.0
+requests==2.32.4
 
 # Database
 sqlalchemy==2.0.23
