@@ -9,9 +9,9 @@ import os
 class Settings(BaseSettings):
     """Application settings loaded from environment variables"""
     
-    # API Keys
-    YOUTUBE_API_KEY: str
-    OPENAI_API_KEY: str
+    # API Keys (optional for development)
+    YOUTUBE_API_KEY: Optional[str] = None
+    OPENAI_API_KEY: Optional[str] = None
     ANTHROPIC_API_KEY: Optional[str] = None
     GOOGLE_API_KEY: Optional[str] = None
     
