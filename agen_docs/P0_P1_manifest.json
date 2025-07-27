@@ -1,0 +1,23 @@
+{
+  "version": "2025-07-27",
+  "files": [
+    "docs/AGENT_GUIDE.md",
+    "docs/CONTRIBUTING.md",
+    "docs/API_README.md",
+    "openapi.yaml",
+    "docs/PROMPTS.md",
+    "schemas/map_schema.json",
+    "schemas/reduce_schema.json",
+    "schemas/validation_schema.json",
+    "docs/DATA_MODEL.md",
+    "sql/ddl.sql",
+    "docs/ERRORS.md",
+    "docs/TRANSCRIPT_POLICY.md",
+    "docs/LOCAL_HISTORY.md",
+    "docs/QA_PLAN.md",
+    "docs/OBSERVABILITY.md",
+    "docs/COST_POLICY.md",
+    "docs/SECURITY.md",
+    "docs/RUNBOOK.md"
+  ]
+}

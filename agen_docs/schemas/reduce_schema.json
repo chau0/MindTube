@@ -1,0 +1,53 @@
+{
+  "title": "ReduceStageSummary",
+  "type": "object",
+  "required": [
+    "summary",
+    "keyIdeas",
+    "takeaways"
+  ],
+  "properties": {
+    "summary": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "ts": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "keyIdeas": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "ts": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "takeaways": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "ts": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
