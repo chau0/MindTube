@@ -1,6 +1,6 @@
 # MindTube — MVP Project Plan / Roadmap
 
-**Version:** 2025‑07‑26 (JST)  
+**Version:** 2025‑01‑27 (JST)  
 **Owner:** You (PM/Builder)
 
 > **Goal:** Ship a usable MVP that ingests a YouTube URL and returns **Summary / Key Ideas / Takeaways / Transcript (downloadable .md)** with timestamp links.
@@ -90,18 +90,18 @@
 
 | Phase | Dates (JST) | Duration |
 |---|---|---|
-| 0. Setup | Sun **Jul 27** (AM) | 0.5 day |
-| 1. UX Prototype | Sun **Jul 27** (PM) | 0.5 day |
-| 2. Backend Scaffold | Mon **Jul 28** | 1 day |
-| 3. Transcript Service | Tue **Jul 29** – Wed **Jul 30** (AM) | 1–1.5 days |
-| 4. Summarization Pipeline | Wed **Jul 30** (PM) – Thu **Jul 31** | 1.5 days |
-| 5. FE Integration | Fri **Aug 1** (AM) | 0.5 day |
-| 6. Cache/History/Errors | Fri **Aug 1** (PM) | 0.5 day |
-| 7. Testing & Quality | Sat **Aug 2** | 0.5–1 day |
-| 8. Launch Prep | Sun **Aug 3** (AM) | 0.5 day |
+| 0. Setup | Mon **Jan 27** ✅ | 0.5 day |
+| 1. UX Prototype | Tue **Jan 28** | 0.5 day |
+| 2. Backend Scaffold | Wed **Jan 29** | 1 day |
+| 3. Transcript Service | Thu **Jan 30** – Fri **Jan 31** (AM) | 1–1.5 days |
+| 4. Summarization Pipeline | Fri **Jan 31** (PM) – Sat **Feb 1** | 1.5 days |
+| 5. FE Integration | Sun **Feb 2** (AM) | 0.5 day |
+| 6. Cache/History/Errors | Sun **Feb 2** (PM) | 0.5 day |
+| 7. Testing & Quality | Mon **Feb 3** | 0.5–1 day |
+| 8. Launch Prep | Tue **Feb 4** (AM) | 0.5 day |
 
-**Go/No‑Go:** Ship MVP by **Sun Aug 3, 2025** if acceptance criteria are met.  
-**Conservative plan:** add 2–3 buffer days across Phases 3–4 and 7 → Launch by **Aug 5–6**.
+**Go/No‑Go:** Ship MVP by **Tue Feb 4, 2025** if acceptance criteria are met.  
+**Conservative plan:** add 2–3 buffer days across Phases 3–4 and 7 → Launch by **Feb 6–7**.
 
 ---
 

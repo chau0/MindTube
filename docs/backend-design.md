@@ -247,7 +247,7 @@ MVP alt: single `runs.json` index (append‑only) storing minimal metadata.
 
 Example log line:
 ```json
-{"ts":"2025-07-27T10:00:01Z","lvl":"INFO","job_id":"...","stage":"mapping",
+{"ts":"2025-01-27T10:00:01Z","lvl":"INFO","job_id":"...","stage":"mapping",
  "chunk_idx":3,"latency_ms":842,"model":"mini-xyz","tokens_in":1450,"tokens_out":210}
 ```
 
