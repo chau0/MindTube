@@ -3,7 +3,7 @@ Configuration settings for MindTube backend
 """
 
 from pydantic_settings import BaseSettings
-from typing import Optional
+from typing import Optional, List
 import os
 
 class Settings(BaseSettings):
@@ -82,6 +82,13 @@ class Settings(BaseSettings):
     ENABLE_COST_TRACKING: bool = True
     REQUESTS_PER_MINUTE: int = 30
     REQUESTS_PER_HOUR: int = 100
+    
+    # YouTube Transcript API & Proxy Configuration
+    WEBSHARE_PROXY_USERNAME: Optional[str] = None
+    WEBSHARE_PROXY_PASSWORD: Optional[str] = None
+    HTTP_PROXY_URL: Optional[str] = None
+    HTTPS_PROXY_URL: Optional[str] = None
+    YOUTUBE_TRANSCRIPT_LANGUAGES: List[str] = ["en", "en-US", "en-GB"]
     
     class Config:
         env_file = ".env"

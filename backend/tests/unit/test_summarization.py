@@ -143,7 +143,8 @@ class TestSummarizationService:
         """Test short summary generation."""
         # Setup mock
         mock_llm_client = mock_get_llm_client.return_value
-        mock_llm_client.generate_summary.return_value = "• Key point 1\n• Key point 2\n• Key point 3"
+        mock_llm_client.generate_summary = AsyncMock(return_value="• Key point 1\n• Key point 2\n• Key point 3")
+        mock_llm_client.count_tokens.return_value = 50  # Mock token count
         
         service = SummarizationService()
         result = await service.generate_short_summary(sample_transcript_segments)
@@ -164,8 +165,9 @@ class TestSummarizationService:
         """Test detailed summary generation."""
         # Setup mocks
         mock_llm_client = mock_get_llm_client.return_value
-        mock_llm_client.process_transcript_chunks.return_value = ["Chunk summary 1", "Chunk summary 2"]
-        mock_llm_client.reduce_summaries.return_value = "• Detailed insight 1\n• Detailed insight 2"
+        mock_llm_client.process_transcript_chunks = AsyncMock(return_value=["Chunk summary 1", "Chunk summary 2"])
+        mock_llm_client.reduce_summaries = AsyncMock(return_value="• Detailed insight 1\n• Detailed insight 2")
+        mock_llm_client.count_tokens.return_value = 50  # Mock token count
         
         service = SummarizationService()
         result = await service.generate_detailed_summary(sample_transcript_segments)
@@ -186,8 +188,9 @@ class TestSummarizationService:
         """Test key ideas extraction."""
         # Setup mocks
         mock_llm_client = mock_get_llm_client.return_value
-        mock_llm_client.process_transcript_chunks.return_value = ["Ideas chunk 1"]
-        mock_llm_client.reduce_summaries.return_value = "• Important concept\n• Key insight"
+        mock_llm_client.process_transcript_chunks = AsyncMock(return_value=["Ideas chunk 1"])
+        mock_llm_client.reduce_summaries = AsyncMock(return_value="• Important concept\n• Key insight")
+        mock_llm_client.count_tokens.return_value = 50  # Mock token count
         
         service = SummarizationService()
         result = await service.extract_key_ideas(sample_transcript_segments)
@@ -207,8 +210,9 @@ class TestSummarizationService:
         """Test actionable takeaways extraction."""
         # Setup mocks
         mock_llm_client = mock_get_llm_client.return_value
-        mock_llm_client.process_transcript_chunks.return_value = ["Takeaways chunk 1"]
-        mock_llm_client.reduce_summaries.return_value = "• Action step 1\n• Practical advice"
+        mock_llm_client.process_transcript_chunks = AsyncMock(return_value=["Takeaways chunk 1"])
+        mock_llm_client.reduce_summaries = AsyncMock(return_value="• Action step 1\n• Practical advice")
+        mock_llm_client.count_tokens.return_value = 50  # Mock token count
         
         service = SummarizationService()
         result = await service.extract_actionable_takeaways(sample_transcript_segments)
@@ -228,9 +232,10 @@ class TestSummarizationService:
         """Test complete video processing."""
         # Setup mocks for all summary types
         mock_llm_client = mock_get_llm_client.return_value
-        mock_llm_client.generate_summary.return_value = "• Short summary point"
-        mock_llm_client.process_transcript_chunks.return_value = ["Chunk result"]
-        mock_llm_client.reduce_summaries.return_value = "• Processed result"
+        mock_llm_client.generate_summary = AsyncMock(return_value="• Short summary point")
+        mock_llm_client.process_transcript_chunks = AsyncMock(return_value=["Chunk result"])
+        mock_llm_client.reduce_summaries = AsyncMock(return_value="• Processed result")
+        mock_llm_client.count_tokens.return_value = 50  # Mock token count
         
         service = SummarizationService()
         result = await service.process_complete_video(sample_transcript_segments, mock_youtube_url)
@@ -264,7 +269,8 @@ class TestSummarizationService:
         """Test error handling in summarization service."""
         # Setup mock to raise exception
         mock_llm_client = mock_get_llm_client.return_value
-        mock_llm_client.generate_summary.side_effect = Exception("LLM Error")
+        mock_llm_client.generate_summary = AsyncMock(side_effect=Exception("LLM Error"))
+        mock_llm_client.count_tokens.return_value = 50  # Mock token count
         
         service = SummarizationService()
         

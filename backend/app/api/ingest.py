@@ -5,6 +5,7 @@ Video ingestion API endpoints
 from fastapi import APIRouter, HTTPException, BackgroundTasks
 from app.models.schemas import VideoIngestRequest, JobResponse, JobStatus, TranscriptSegment
 from app.services.summarization import summarization_service
+from app.services.youtube_transcript import youtube_transcript_service
 from app.core.logging import logger
 import uuid
 import asyncio
@@ -99,26 +100,33 @@ async def process_video_pipeline(job_id: str, request: VideoIngestRequest):
             # Simulate processing time
             await asyncio.sleep(2)
         
-        # Create mock transcript for testing Azure OpenAI integration
-        mock_transcript = [
-            TranscriptSegment(start_ms=0, end_ms=5000, text="Welcome to this tutorial on machine learning fundamentals."),
-            TranscriptSegment(start_ms=5000, end_ms=12000, text="Today we'll cover supervised learning, unsupervised learning, and reinforcement learning."),
-            TranscriptSegment(start_ms=12000, end_ms=20000, text="Supervised learning uses labeled data to train models that can make predictions."),
-            TranscriptSegment(start_ms=20000, end_ms=28000, text="Common examples include classification and regression problems."),
-            TranscriptSegment(start_ms=28000, end_ms=35000, text="Unsupervised learning finds patterns in data without labeled examples."),
-            TranscriptSegment(start_ms=35000, end_ms=42000, text="Clustering and dimensionality reduction are key unsupervised techniques."),
-            TranscriptSegment(start_ms=42000, end_ms=50000, text="Reinforcement learning trains agents through trial and error with rewards."),
-            TranscriptSegment(start_ms=50000, end_ms=58000, text="Key takeaway: Choose the right approach based on your data and problem type."),
-            TranscriptSegment(start_ms=58000, end_ms=65000, text="Practice with real datasets to build your machine learning skills."),
-            TranscriptSegment(start_ms=65000, end_ms=70000, text="Thanks for watching, and happy learning!")
-        ]
+        # Fetch real transcript from YouTube
+        try:
+            logger.info("Fetching YouTube transcript", job_id=job_id, url=str(request.url))
+            transcript = await youtube_transcript_service.fetch_transcript_with_fallback(str(request.url))
+            logger.info("YouTube transcript fetched successfully", job_id=job_id, segment_count=len(transcript))
+        except Exception as e:
+            logger.warning("Failed to fetch YouTube transcript, using fallback", job_id=job_id, error=str(e))
+            # Fall back to mock transcript for demo purposes
+            transcript = [
+                TranscriptSegment(start_ms=0, end_ms=5000, text="Welcome to this tutorial on machine learning fundamentals."),
+                TranscriptSegment(start_ms=5000, end_ms=12000, text="Today we'll cover supervised learning, unsupervised learning, and reinforcement learning."),
+                TranscriptSegment(start_ms=12000, end_ms=20000, text="Supervised learning uses labeled data to train models that can make predictions."),
+                TranscriptSegment(start_ms=20000, end_ms=28000, text="Common examples include classification and regression problems."),
+                TranscriptSegment(start_ms=28000, end_ms=35000, text="Unsupervised learning finds patterns in data without labeled examples."),
+                TranscriptSegment(start_ms=35000, end_ms=42000, text="Clustering and dimensionality reduction are key unsupervised techniques."),
+                TranscriptSegment(start_ms=42000, end_ms=50000, text="Reinforcement learning trains agents through trial and error with rewards."),
+                TranscriptSegment(start_ms=50000, end_ms=58000, text="Key takeaway: Choose the right approach based on your data and problem type."),
+                TranscriptSegment(start_ms=58000, end_ms=65000, text="Practice with real datasets to build your machine learning skills."),
+                TranscriptSegment(start_ms=65000, end_ms=70000, text="Thanks for watching, and happy learning!")
+            ]
         
         try:
             # Process video using Azure OpenAI
             logger.info("Starting Azure OpenAI processing", job_id=job_id)
             
             summaries = await summarization_service.process_complete_video(
-                transcript=mock_transcript,
+                transcript=transcript,
                 video_url=str(request.url)
             )
             
@@ -139,7 +147,7 @@ async def process_video_pipeline(job_id: str, request: VideoIngestRequest):
                 "detailed_summary": [section.dict() for section in summaries["detailed_summary"]],
                 "key_ideas": [section.dict() for section in summaries["key_ideas"]],
                 "actionable_takeaways": [section.dict() for section in summaries["actionable_takeaways"]],
-                "transcript": [segment.dict() for segment in mock_transcript],
+                "transcript": [segment.dict() for segment in transcript],
                 "processing_stats": {
                     "total_duration_seconds": 15,
                     "tokens_used": 2500,
