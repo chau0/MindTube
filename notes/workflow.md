@@ -1,0 +1,7 @@
+- create prd 
+- roadmap miles stone
+- architecture desgin
+- backend design
+- api design
+- fronte end desgin
+- wbs

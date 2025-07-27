@@ -272,7 +272,11 @@ class TestYouTubeTranscriptService:
     async def test_fetch_transcript_no_transcript_found(self, mock_api_class):
         """Test handling of NoTranscriptFound exception."""
         mock_api_instance = Mock()
-        mock_api_instance.fetch.side_effect = NoTranscriptFound("No transcript found")
+        mock_api_instance.fetch.side_effect = NoTranscriptFound(
+            video_id="test_video_id",
+            requested_language_codes=["en"],
+            transcript_data=Mock()
+        )
         mock_api_class.return_value = mock_api_instance
         
         service = YouTubeTranscriptService()

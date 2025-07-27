@@ -43,7 +43,6 @@ Given a YouTube URL, produce:
 
 **Transcript:**  
 - Primary: Fetch captions via official API or allowed endpoints  
-- Fallback: Optional ASR (e.g., Whisper) if no captions; toggle in settings  
 - Keep original timestamps at sentence/segment level (≈ 5–15s granularity)
 
 **Summarization Pipeline:**  
@@ -70,7 +69,7 @@ Given a YouTube URL, produce:
 
 **Constraints:**  
 - Max video duration (MVP): ≤ 90 minutes  
-- Language: English or Japanese (others best‑effort)
+- Language: English 
 - Rate limiting: 3 concurrent jobs max; queue overflow returns friendly message
 - Filesize/time limits for ASR: configurable, default hard stop at 120 minutes
 
