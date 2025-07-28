@@ -1,163 +1,96 @@
-# MindTube MVP
+# MindTube - YouTube Learning Assistant
 
-**AI-Powered YouTube Video Summarizer**
+A CLI tool and API for extracting transcripts, summaries, key ideas, and mindmaps from YouTube videos.
 
-Transform long YouTube videos into concise, actionable insights with timestamped summaries, key ideas, and takeaways.
+## Features
 
-## 🚀 Quick Start
+- 📝 **Transcript Extraction**: Automatic retrieval of video transcripts
+- 📄 **Content Summarization**: AI-powered summarization of video content  
+- 💡 **Key Ideas Extraction**: Identification of main concepts and takeaways
+- 🗺️ **Mindmap Generation**: Visual representation in Mermaid format
+- 🔧 **Multiple Interfaces**: CLI tool and REST API
+- 💾 **Smart Caching**: Efficient storage and retrieval of processed content
 
-### Prerequisites
-- Node.js 18+ 
-- Python 3.9+
-- [uv](https://docs.astral.sh/uv/) (Python package manager)
-- YouTube Data API key
-- OpenAI API key (or other LLM provider)
+## Quick Start
 
-### Development Setup
+### Installation
 
-1. **Clone and setup environment**
 ```bash
-git clone <repo-url>
+# Install from PyPI (coming soon)
+pip install mindtube
+
+# Or install from source
+git clone https://github.com/mindtube/mindtube.git
 cd mindtube
+make install-deps
 ```
 
-2. **Automated Setup (Recommended)**
-```bash
-# This will setup both backend and frontend automatically
-./scripts/dev.sh
-```
-
-3. **Manual Setup**
-
-**Backend Setup:**
-```bash
-cd backend
-# Install uv if not already installed
-curl -LsSf https://astral.sh/uv/install.sh | sh
-
-# Setup environment and dependencies
-make setup
-
-# Edit environment file with your API keys
-cp .env.example .env
-# Edit .env with your API keys
-
-# Start backend server
-make run
-```
-
-**Frontend Setup:**
-```bash
-cd frontend
-npm install
-cp .env.example .env
-npm run dev
-```
-
-4. **Access the application**
-- Frontend: http://localhost:3000
-- Backend API: http://localhost:8000
-- API Docs: http://localhost:8000/docs
-
-## 📁 Project Structure
-
-```
-mindtube/
-├── backend/           # FastAPI backend
-│   ├── app/
-│   │   ├── api/       # API routes
-│   │   ├── core/      # Core business logic
-│   │   ├── models/    # Data models
-│   │   └── services/  # External services
-│   ├── tests/
-│   └── requirements.txt
-├── frontend/          # Next.js frontend
-│   ├── src/
-│   │   ├── app/       # App router pages
-│   │   ├── components/# React components
-│   │   ├── lib/       # Utilities
-│   │   └── types/     # TypeScript types
-│   ├── public/
-│   └── package.json
-├── docs/              # Documentation
-└── scripts/           # Development scripts
-```
-
-## 🎯 MVP Features
-
-- ✅ YouTube URL ingestion and validation
-- ✅ Automatic transcript extraction (captions + ASR fallback)
-- ✅ AI-powered summarization (short + detailed)
-- ✅ Key ideas and actionable takeaways extraction
-- ✅ Timestamped bullets with YouTube links
-- ✅ Markdown export functionality
-- ✅ Local processing history
-- ✅ Progress tracking and error handling
-
-## 🛠 Development
-
-### Backend Development Commands
-
-The backend uses a Makefile for common development tasks:
+### Configuration
 
 ```bash
-cd backend
+# Set up Azure OpenAI credentials
+export AZURE_OPENAI_ENDPOINT="https://your-resource.openai.azure.com/"
+export AZURE_OPENAI_API_KEY="your-api-key"
 
-# Setup and installation
-make setup          # Initial setup with uv
-make install        # Install production dependencies
-make install-dev    # Install development dependencies
-
-# Development
-make run            # Start development server
-make build          # Validate application build
-make test           # Run tests
-make test-cov       # Run tests with coverage
-make lint           # Run linting (flake8, mypy, bandit)
-make format         # Format code (black, isort)
-
-# Maintenance
-make update         # Update dependencies
-make clean          # Clean cache and temporary files
-make info           # Show environment information
+# Or create config file
+mindtube config init
 ```
 
-### Frontend Development Commands
+### Usage
 
 ```bash
-cd frontend
+# Analyze a YouTube video
+mindtube analyze https://youtu.be/VIDEO_ID
 
-# Development
-npm run dev         # Start development server
-npm run build       # Build for production
-npm run start       # Start production server
+# Generate summary only
+mindtube summarize https://youtu.be/VIDEO_ID
 
-# Testing and Quality
-npm test            # Run tests
-npm run lint        # Run ESLint
-npm run type-check  # TypeScript type checking
+# Create mindmap
+mindtube mindmap https://youtu.be/VIDEO_ID --save mindmap.md
 ```
 
-### Environment Files
+## Development
 
-The project now uses separate environment files:
-- `backend/.env` - Backend configuration (API keys, database, etc.)
-- `frontend/.env` - Frontend configuration (API endpoints, feature flags, etc.)
+### Setup
 
-## 📊 Success Metrics (MVP)
-- **Latency**: ≤15s for first summary (≤10min video with captions)
-- **Completion Rate**: ≥95% jobs complete without retry
-- **Quality**: ≥4/5 average on coverage/correctness/actionability
-- **Cost**: ≤¥2-¥10 per 10-min video
+```bash
+make init
+make install-deps
+make install-dev-deps
+```
 
-## 🚦 Status
+### Testing
 
-**Current Phase**: Phase 0 - Project Setup ✅ (Completed 2025-01-27)  
-**Next**: Phase 1 - UX Prototype & Flow (Starting 2025-01-28)  
-**Target MVP Launch**: February 4, 2025
+```bash
+make test
+make lint
+make typecheck
+```
 
-See [docs/mindtube_roadmap.md](docs/mindtube_roadmap.md) for detailed timeline.
+### API Server
 
-## 📄 License
+```bash
+make serve
+```
 
-MIT License - see LICENSE file for details.
+## Documentation
+
+- [CLI Guide](docs/cli/)
+- [API Reference](docs/api/)
+- [Configuration](docs/configuration.md)
+- [Examples](docs/examples/)
+
+## Contributing
+
+We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+- [youtube-transcript-api](https://github.com/jdepoix/youtube-transcript-api) for transcript extraction
+- [Azure OpenAI](https://azure.microsoft.com/en-us/products/ai-services/openai-service) for AI capabilities
+- [Typer](https://typer.tiangolo.com/) for the CLI framework
+- [FastAPI](https://fastapi.tiangolo.com/) for the API framework
