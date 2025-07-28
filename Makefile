@@ -1,32 +1,3 @@
-# TASK-002: Makefile Implementation
-
-## Task Information
-- **ID**: TASK-002
-- **Phase**: 0 - Project Foundation
-- **Estimate**: 45 minutes
-- **Dependencies**: TASK-001
-- **Status**: 🟢 Done
-
-## Description
-Implement all Makefile targets referenced in the roadmap document. This provides a consistent interface for development, testing, and deployment operations across different environments.
-
-## Acceptance Criteria
-- [x] `make init` - Initialize project
-- [x] `make install-deps` - Install core dependencies
-- [x] `make install-dev-deps` - Install development dependencies
-- [x] `make install-api-deps` - Install FastAPI dependencies
-- [x] `make install-whisper-deps` - Install Whisper dependencies
-- [x] `make test` - Run tests
-- [x] `make lint` - Run linting
-- [x] `make typecheck` - Run type checking
-- [x] `make serve` - Start development server
-- [x] `make run-summarize`, `make run-analyze`, `make run-mindmap` - CLI commands
-- [x] All targets work correctly and provide helpful output
-- [x] Error handling for missing dependencies
-
-## Makefile Implementation
-
-```makefile
 # MindTube - Makefile for development and deployment
 # Requires: Python 3.8+, pip
 
@@ -134,19 +105,31 @@ test: ## Run all tests
 
 test-unit: ## Run unit tests only
 	@echo "🧪 Running unit tests..."
-	@$(PYTHON) -m pytest tests/unit/ -v
+	@$(PYTHON) -m pytest tests/unit/ -v -m unit
 
 test-integration: ## Run integration tests only
 	@echo "🧪 Running integration tests..."
-	@$(PYTHON) -m pytest tests/integration/ -v -m "not slow"
+	@$(PYTHON) -m pytest tests/integration/ -v -m integration
 
 test-e2e: ## Run end-to-end tests
 	@echo "🧪 Running end-to-end tests..."
-	@$(PYTHON) -m pytest tests/e2e/ -v
+	@$(PYTHON) -m pytest tests/e2e/ -v -m "not slow"
 
 test-performance: ## Run performance tests
 	@echo "🧪 Running performance tests..."
-	@$(PYTHON) -m pytest tests/performance/ -v
+	@$(PYTHON) -m pytest tests/performance/ -v -m slow
+
+test-coverage: ## Run tests with coverage report
+	@echo "🧪 Running tests with coverage..."
+	@$(PYTHON) -m pytest tests/ --cov=mindtube --cov-report=html --cov-report=xml --cov-report=term-missing --cov-fail-under=80
+
+test-fast: ## Run fast tests only (excludes slow and external)
+	@echo "🧪 Running fast tests..."
+	@$(PYTHON) -m pytest tests/ -v -m "not slow and not external"
+
+test-external: ## Run external service tests
+	@echo "🧪 Running external service tests..."
+	@$(PYTHON) -m pytest tests/ -v -m external
 
 lint: ## Run code linting
 	@echo "🔍 Running linter..."
@@ -344,150 +327,5 @@ bump-version: ## Bump version (usage: make bump-version VERSION=0.2.0)
 		exit 1; \
 	fi
 	@echo "📈 Bumping version to $(VERSION)..."
-	@sed -i 's/version = "[^"]*"/version = "$(VERSION)"/' pyproject.toml
+	@sed -i '/^\[project\]/,/^\[/ s/version = "[^"]*"/version = "$(VERSION)"/' pyproject.toml
 	@echo "✅ Version bumped to $(VERSION)"
-```
-
-## Implementation Steps
-
-### Step 1: Create the Makefile
-Create the file `Makefile` in the project root with the content above.
-
-### Step 2: Test Basic Targets
-```bash
-# Test help target
-make help
-
-# Test Python detection
-make check-python
-
-# Test initialization
-make init
-```
-
-### Step 3: Test Dependency Installation
-```bash
-# Test core dependencies
-make install-deps
-
-# Test development dependencies  
-make install-dev-deps
-```
-
-### Step 4: Test Quality Targets
-```bash
-# Test linting (will fail initially, that's expected)
-make lint
-
-# Test type checking (will fail initially, that's expected)
-make typecheck
-
-# Test formatting
-make format
-```
-
-### Step 5: Test CLI Targets
-```bash
-# Test CLI commands (will fail until implementation, that's expected)
-make run-summarize URL=https://youtu.be/dQw4w9WgXcQ
-```
-
-## Verification Steps
-
-### Step 1: Verify Makefile Syntax
-```bash
-make -n help
-```
-Should show the commands that would be executed without errors.
-
-### Step 2: Test Help Target
-```bash
-make help
-```
-Should display a nicely formatted help message with all available targets.
-
-### Step 3: Test Python Detection
-```bash
-make check-python
-```
-Should pass if Python 3.8+ is installed, fail with helpful message otherwise.
-
-### Step 4: Test Project Initialization
-```bash
-make init
-```
-Should create virtual environment, directories, and .env file.
-
-### Step 5: Test Dependency Installation
-```bash
-source .venv/bin/activate  # Activate virtual environment
-make install-deps
-```
-Should install all core dependencies without errors.
-
-## Success Criteria Checklist
-
-- [x] Makefile created with all required targets
-- [x] `make help` shows formatted help message
-- [x] `make init` creates project structure and virtual environment
-- [x] `make install-deps` installs core dependencies successfully
-- [x] `make install-dev-deps` installs development dependencies
-- [x] `make install-api-deps` installs FastAPI dependencies
-- [x] `make install-whisper-deps` installs Whisper dependencies
-- [x] `make test` target exists (will fail until tests implemented)
-- [x] `make lint` target exists (will fail until code implemented)
-- [x] `make typecheck` target exists (will fail until code implemented)
-- [x] `make serve` target exists (will fail until API implemented)
-- [x] CLI targets (`run-summarize`, `run-analyze`, `run-mindmap`) exist
-- [x] Error handling for missing parameters works correctly
-- [x] All targets provide helpful output and error messages
-
-## Error Handling Examples
-
-### Missing URL Parameter
-```bash
-$ make run-summarize
-❌ URL parameter required. Usage: make run-summarize URL=https://youtu.be/VIDEO_ID
-```
-
-### Missing Python
-```bash
-$ make check-python
-Error: Python not found. Please install Python 3.8+
-```
-
-### Missing Virtual Environment
-```bash
-$ make test
-❌ Virtual environment not found. Run 'make init' first.
-```
-
-## Next Steps
-
-After completing this task:
-1. Move to **TASK-003: Core Dependencies Configuration**
-2. Update task status to 🟢 Done
-3. Test the Makefile with actual dependency installation
-
-## Notes
-
-- The Makefile uses PHONY targets to avoid conflicts with files
-- Error messages are user-friendly and provide guidance
-- All targets include helpful descriptions for the help system
-- The Makefile supports both development and CI/CD workflows
-- Virtual environment detection ensures consistent Python environment
-- Parameter validation prevents common usage errors
-
-## Troubleshooting
-
-**Issue**: `make: command not found`
-**Solution**: Install make utility (usually pre-installed on Unix systems)
-
-**Issue**: Python version errors
-**Solution**: Ensure Python 3.8+ is installed and accessible
-
-**Issue**: Permission errors during init
-**Solution**: Ensure write permissions in project directory
-
-**Issue**: Virtual environment activation fails
-**Solution**: Check Python venv module is available
