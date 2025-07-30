@@ -1,299 +1,120 @@
+[project]
+name = "ytnote"
+version = "0.0.1"
+description = "A tool to download youtube caption and generate summary"
+authors = [{ name = "Chau", email = "haichaule1990@gmail.com" }]
+readme = "README.md"
+keywords = ['python', 'youtube', 'transcript', 'summary', 'ai']
+requires-python = ">=3.9,<4.0"
+dependencies = [
+    "typer>=0.9.0",
+    "rich>=13.0.0",
+    "pydantic>=2.0.0",
+    "pydantic-settings>=2.0.0",
+    "youtube-transcript-api>=0.6.0",
+    "requests>=2.31.0",
+]
+classifiers = [
+    "Intended Audience :: Developers",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+[project.scripts]
+ytnote = "ytnote.cli.main:app"
+
+[project.urls]
+Homepage = "https://chau0.github.io/MindTube/"
+Repository = "https://github.com/chau0/MindTube"
+Documentation = "https://chau0.github.io/MindTube/"
+
+[dependency-groups]
+dev = [
+    "pytest>=7.2.0",
+    "pre-commit>=2.20.0",
+    "tox-uv>=1.11.3",
+    
+    "mypy>=0.991",
+    
+    "ruff>=0.11.5",
+    
+]
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
-[project]
-name = "mindtube"
-version = "0.1.0"
-description = "YouTube Learning Assistant - Extract transcripts, summaries, and mindmaps from YouTube videos"
-readme = "README.md"
-license = "MIT"
-authors = [
-    {name = "MindTube Team", email = "team@mindtube.dev"},
-]
-classifiers = [
-    "Development Status :: 3 - Alpha",
-    "Intended Audience :: Developers",
-    "Intended Audience :: Education",
-    "License :: OSI Approved :: MIT License",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Topic :: Education",
-    "Topic :: Multimedia :: Video",
-    "Topic :: Scientific/Engineering :: Artificial Intelligence",
-]
-keywords = ["youtube", "transcript", "summary", "mindmap", "ai", "learning"]
-requires-python = ">=3.8"
-
-dependencies = [
-    # Core dependencies
-    "youtube-transcript-api>=0.6.0,<1.0.0",
-    "openai>=1.0.0,<2.0.0",
-    "typer[all]>=0.9.0,<1.0.0",
-    "pydantic[dotenv]>=2.0.0,<3.0.0",
-    "requests>=2.28.0,<3.0.0",
-    "python-dotenv>=1.0.0,<2.0.0",
-    "pyyaml>=6.0.0,<7.0.0",
-    "rich>=13.0.0,<15.0.0",
-    "aiofiles>=23.0.0,<25.0.0",
-    "httpx>=0.24.0,<1.0.0",
-]
-
-[project.optional-dependencies]
-dev = [
-    # Testing
-    "pytest>=7.4.0,<9.0.0",
-    "pytest-cov>=4.1.0,<6.0.0",
-    "pytest-asyncio>=0.21.0,<1.0.0",
-    "pytest-mock>=3.11.0,<4.0.0",
-    "pytest-xdist>=3.3.0,<4.0.0",
-    
-    # Code quality
-    "ruff>=0.1.0,<1.0.0",
-    "mypy>=1.5.0,<2.0.0",
-    "black>=23.7.0,<25.0.0",
-    "isort>=5.12.0,<6.0.0",
-    
-    # Development tools
-    "pre-commit>=3.3.0,<4.0.0",
-    "ipython>=8.14.0,<9.0.0",
-    "ipdb>=0.13.0,<1.0.0",
-    
-    # Security
-    "safety>=2.3.0,<4.0.0",
-    "bandit>=1.7.0,<2.0.0",
-]
-
-api = [
-    # Web framework
-    "fastapi>=0.103.0,<1.0.0",
-    "uvicorn[standard]>=0.23.0,<1.0.0",
-    
-    # WebSocket support
-    "websockets>=11.0.0,<16.0.0",
-    
-    # Rate limiting
-    "slowapi>=0.1.9,<1.0.0",
-    
-    # File uploads
-    "python-multipart>=0.0.6,<1.0.0",
-]
-
-whisper = [
-    # ASR capabilities
-    "faster-whisper>=0.9.0,<1.0.0",
-    "yt-dlp>=2023.7.6",
-    
-    # Audio processing
-    "librosa>=0.10.0,<1.0.0",
-    "soundfile>=0.12.0,<1.0.0",
-]
-
-docs = [
-    # Documentation generation
-    "mkdocs>=1.5.0,<2.0.0",
-    "mkdocs-material>=9.2.0,<10.0.0",
-    "mkdocs-mermaid2-plugin>=1.1.0,<2.0.0",
-    
-    # API documentation
-    "mkdocs-swagger-ui-tag>=0.6.0,<1.0.0",
-]
-
-performance = [
-    # Profiling and monitoring
-    "py-spy>=0.3.14,<1.0.0",
-    "memory-profiler>=0.61.0,<1.0.0",
-    "line-profiler>=4.1.0,<5.0.0",
-    
-    # Async improvements
-    "uvloop>=0.17.0,<1.0.0; sys_platform != 'win32'",
-]
-
-all = [
-    # Include all optional dependencies
-    "mindtube[dev,api,whisper,docs,performance]",
-]
-
-[project.urls]
-Homepage = "https://github.com/mindtube/mindtube"
-Documentation = "https://mindtube.readthedocs.io"
-Repository = "https://github.com/mindtube/mindtube"
-"Bug Tracker" = "https://github.com/mindtube/mindtube/issues"
-
-[project.scripts]
-mindtube = "mindtube.cli.main:app"
-
 [tool.hatch.build.targets.wheel]
-packages = ["mindtube"]
+packages = ["src/ytnote"]
+
+[tool.mypy]
+files = ["src"]
+disallow_untyped_defs = true
+disallow_any_unimported = true
+no_implicit_optional = true
+check_untyped_defs = true
+warn_return_any = true
+warn_unused_ignores = true
+show_error_codes = true
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-python_files = ["test_*.py"]
-python_classes = ["Test*"]
-python_functions = ["test_*"]
-addopts = [
-    "--verbose",
-    "--tb=short",
-    "--strict-markers",
-    "--strict-config",
-    "--disable-warnings",
-    "--cov=mindtube",
-    "--cov-report=term-missing",
-    "--cov-report=html:htmlcov",
-    "--cov-report=xml",
-    "--cov-fail-under=80",
-]
-markers = [
-    "unit: Unit tests",
-    "integration: Integration tests",
-    "e2e: End-to-end tests",
-    "performance: Performance tests",
-    "slow: Slow running tests",
-    "external: Tests that require external services",
-]
-
-[tool.coverage.run]
-source = ["mindtube"]
-omit = [
-    "tests/*",
-    "mindtube/__main__.py",
-    "*/migrations/*",
-    "*/venv/*",
-    "*/.venv/*",
-]
-branch = true
-
-[tool.coverage.report]
-exclude_lines = [
-    "pragma: no cover",
-    "def __repr__",
-    "def __str__",
-    "raise AssertionError",
-    "raise NotImplementedError",
-    "if __name__ == .__main__.:",
-    "if TYPE_CHECKING:",
-    "class .*\\bProtocol\\):",
-    "@(abc\\.)?abstractmethod",
-]
-show_missing = true
-precision = 2
-skip_covered = false
-skip_empty = false
-
-[tool.coverage.html]
-directory = "htmlcov"
-
-[tool.coverage.xml]
-output = "coverage.xml"
-
-[tool.black]
-line-length = 88
-target-version = ['py38', 'py39', 'py310', 'py311']
-include = '\.pyi?$'
-extend-exclude = '''
-/(
-  # directories
-  \.eggs
-  | \.git
-  | \.hg
-  | \.mypy_cache
-  | \.tox
-  | \.venv
-  | build
-  | dist
-)/
-'''
-
-[tool.isort]
-profile = "black"
-multi_line_output = 3
-line_length = 88
-known_first_party = ["mindtube"]
-known_third_party = [
-    "youtube_transcript_api",
-    "openai",
-    "typer",
-    "pydantic",
-    "fastapi",
-    "uvicorn",
-    "pytest",
-    "rich",
-]
-sections = ["FUTURE", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
-
-[tool.bandit]
-exclude_dirs = ["tests", "build", "dist"]
-skips = ["B101", "B601"]  # Skip assert_used and shell_injection_process_args
 
 [tool.ruff]
-target-version = "py38"
-line-length = 88
+target-version = "py39"
+line-length = 120
+fix = true
+
+[tool.ruff.lint]
 select = [
-    "E",   # pycodestyle errors
-    "W",   # pycodestyle warnings
-    "F",   # pyflakes
-    "I",   # isort
-    "B",   # flake8-bugbear
-    "C4",  # flake8-comprehensions
-    "UP",  # pyupgrade
-    "N",   # pep8-naming
-    "S",   # flake8-bandit
-    "T20", # flake8-print
-    "SIM", # flake8-simplify
-    "ARG", # flake8-unused-arguments
-    "PTH", # flake8-use-pathlib
-    "ERA", # eradicate
-    "PL",  # pylint
-    "RUF", # ruff-specific rules
+    # flake8-2020
+    "YTT",
+    # flake8-bandit
+    "S",
+    # flake8-bugbear
+    "B",
+    # flake8-builtins
+    "A",
+    # flake8-comprehensions
+    "C4",
+    # flake8-debugger
+    "T10",
+    # flake8-simplify
+    "SIM",
+    # isort
+    "I",
+    # mccabe
+    "C90",
+    # pycodestyle
+    "E", "W",
+    # pyflakes
+    "F",
+    # pygrep-hooks
+    "PGH",
+    # pyupgrade
+    "UP",
+    # ruff
+    "RUF",
+    # tryceratops
+    "TRY",
 ]
 ignore = [
-    "E501",   # line too long, handled by black
-    "B008",   # do not perform function calls in argument defaults
-    "C901",   # too complex
-    "S101",   # use of assert
-    "S603",   # subprocess call: check for execution of untrusted input
-    "S607",   # starting a process with a partial executable path
-    "PLR0913", # too many arguments to function call
-    "PLR0912", # too many branches
-    "PLR0915", # too many statements
+    # LineTooLong
+    "E501",
+    # DoNotAssignLambda
+    "E731",
 ]
 
-[tool.ruff.per-file-ignores]
-"__init__.py" = ["F401", "F403"]
-"tests/**/*" = ["B011", "S101", "ARG001", "ARG002"]
-"scripts/**/*" = ["T20"]
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101"]
 
-[tool.ruff.isort]
-known-first-party = ["mindtube"]
-force-sort-within-sections = true
+[tool.ruff.format]
+preview = true
 
-[tool.mypy]
-python_version = "3.8"
-check_untyped_defs = true
-disallow_any_generics = true
-disallow_incomplete_defs = true
-disallow_untyped_defs = true
-no_implicit_optional = true
-warn_redundant_casts = true
-warn_unused_ignores = true
-warn_return_any = true
-strict_equality = true
-show_error_codes = true
 
-# Per-module options
-[[tool.mypy.overrides]]
-module = [
-    "youtube_transcript_api.*",
-    "yt_dlp.*",
-    "faster_whisper.*",
-    "librosa.*",
-    "soundfile.*",
-]
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "tests.*"
-disallow_untyped_defs = false
