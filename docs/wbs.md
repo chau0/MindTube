@@ -3,8 +3,8 @@
 > Paste this file into your repo as `docs/wbs.md`.
 
 ## Legend
-- **Deps** = prerequisites by Task ID  
-- **Est.** = effort in focused hours (single experienced dev)  
+- **Deps** = prerequisites by Task ID
+- **Est.** = effort in focused hours (single experienced dev)
 - **DoD** = Definition of Done (checklist)
 
 ---
@@ -34,7 +34,7 @@
 | **1.17** | Docs & examples | README quickstart; example commands; troubleshooting. | 1.16 | 1 | Fresh clone → user can process 1 video in <5 min. |
 | **1.18** | Smoke run (3 vids) | Human validation: human captions, auto captions, no captions. | 1.16 | 1 | Artifacts present under `data/<video_id>/`; spot check OK. |
 
-**Phase 1 subtotal:** **30–32 h**  
+**Phase 1 subtotal:** **30–32 h**
 **Milestone:** `ytnote process <url>` generates validated JSON artifacts reproducibly.
 
 ---
@@ -58,7 +58,7 @@
 | **2.11** | Containerization | Dockerfile, `make api-up`, live reload dev compose. | 2.1 | 2 | `docker compose up` runs locally; health 200. |
 | **2.12** | Tests | Unit (handlers) + integration (bg jobs); happy & sad paths. | 2.6 | 3 | CI green; 80% lines in `api/` & handlers. |
 
-**Phase 2 subtotal:** **21–22 h**  
+**Phase 2 subtotal:** **21–22 h**
 **Milestone:** Non‑blocking ingest + polling; artifacts retrievable via REST.
 
 ---
@@ -79,7 +79,7 @@
 | **3.8** | E2E test | Playwright happy path (URL → results). | 3.4 | 2 | Headless run green in CI. |
 | **3.9** | Deploy docs | README for UI dev & API config; `make ui-up`. | 3.1 | 1 | New dev can run UI in <5 min. |
 
-**Phase 3 subtotal:** **16–17 h**  
+**Phase 3 subtotal:** **16–17 h**
 **Milestone:** One‑page UI from URL to results with visible progress and downloads.
 
 ---
@@ -99,32 +99,32 @@
 
 ## Roll‑up Estimates
 
-- **Phase 1:** 30–32 h  
-- **Phase 2:** 21–22 h  
-- **Phase 3:** 16–17 h  
-- **Optional:** 13–14 h  
+- **Phase 1:** 30–32 h
+- **Phase 2:** 21–22 h
+- **Phase 3:** 16–17 h
+- **Optional:** 13–14 h
 
-**Core (P1–P3) total:** **67–71 hours**  
+**Core (P1–P3) total:** **67–71 hours**
 Add **~15% buffer** for unknowns ⇒ **77–82 hours**.
 
 ---
 
 ## Critical Path
-1. 1.5 → 1.7 → 1.8 → 1.10 → 1.11 → 1.12 → 1.14  
-2. 2.4 (ingest) → 2.5 (status) → 2.6 (artifacts)  
+1. 1.5 → 1.7 → 1.8 → 1.10 → 1.11 → 1.12 → 1.14
+2. 2.4 (ingest) → 2.5 (status) → 2.6 (artifacts)
 3. 3.2 (submit) → 3.3 (poll) → 3.4 (render)
 
 ---
 
 ## Acceptance / Phase Milestones
 
-- **P1 Acceptance:** Given a URL, `ytnote process` writes `transcript.json`, `chunks.jsonl`, `summary.json`, `main_ideas.json`, `takeaways.json` under `data/<video_id>/`. Re‑run without `--force` is a no‑op.  
-- **P2 Acceptance:** `POST /ingest` returns `job_id`; `GET /status` transitions to `done`; `GET /videos/{id}/summary` returns validated JSON.  
+- **P1 Acceptance:** Given a URL, `ytnote process` writes `transcript.json`, `chunks.jsonl`, `summary.json`, `main_ideas.json`, `takeaways.json` under `data/<video_id>/`. Re‑run without `--force` is a no‑op.
+- **P2 Acceptance:** `POST /ingest` returns `job_id`; `GET /status` transitions to `done`; `GET /videos/{id}/summary` returns validated JSON.
 - **P3 Acceptance:** UI accepts URL, shows progress, and renders results; transcript downloadable.
 
 ---
 
 ## Assumptions
-- Gemini API access and quotas available.  
-- Workstation has Python 3.11+, `uv`; `yt-dlp` available if fallback enabled.  
+- Gemini API access and quotas available.
+- Workstation has Python 3.11+, `uv`; `yt-dlp` available if fallback enabled.
 - Single developer; no heavy auth/hosting work in this sprint.

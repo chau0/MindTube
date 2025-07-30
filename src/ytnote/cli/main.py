@@ -7,9 +7,7 @@ from ytnote.config import settings
 
 console = Console()
 app = typer.Typer(
-    name="ytnote",
-    help="A tool to download YouTube captions and generate summaries",
-    rich_markup_mode="rich"
+    name="ytnote", help="A tool to download YouTube captions and generate summaries", rich_markup_mode="rich"
 )
 
 
@@ -18,7 +16,7 @@ def fetch(
     url: str = typer.Argument(..., help="YouTube URL to fetch transcript from"),
     lang: str = typer.Option("en", "--lang", "-l", help="Preferred transcript language"),
     force: bool = typer.Option(False, "--force", "-f", help="Force re-fetch even if cached"),
-    outdir: str = typer.Option(None, "--outdir", "-o", help="Output directory (overrides config)")
+    outdir: str = typer.Option(None, "--outdir", "-o", help="Output directory (overrides config)"),
 ) -> None:
     """Fetch transcript for a YouTube video."""
     console.print(f"[bold blue]Fetching transcript for:[/bold blue] {url}")
@@ -61,7 +59,7 @@ def process(
     url: str = typer.Argument(..., help="YouTube URL to process completely"),
     lang: str = typer.Option("en", "--lang", "-l", help="Preferred transcript language"),
     force: bool = typer.Option(False, "--force", "-f", help="Force re-processing even if cached"),
-    outdir: str = typer.Option(None, "--outdir", "-o", help="Output directory (overrides config)")
+    outdir: str = typer.Option(None, "--outdir", "-o", help="Output directory (overrides config)"),
 ) -> None:
     """Process a YouTube video completely (fetch + summarize + ideas + takeaways)."""
     console.print(f"[bold blue]Processing:[/bold blue] {url}")
@@ -70,9 +68,7 @@ def process(
 
 
 @app.command()
-def config(
-    show: bool = typer.Option(False, "--show", help="Show current configuration")
-) -> None:
+def config(show: bool = typer.Option(False, "--show", help="Show current configuration")) -> None:
     """Show or manage configuration."""
     if show:
         console.print("[bold blue]Current Configuration:[/bold blue]")
